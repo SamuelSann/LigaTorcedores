@@ -4,7 +4,7 @@ import { Banner } from "@/components/Banner";
 import { ListaCampeonatos } from "@/components/ListaCampeonatos";
 import { Sidebar } from "@/components/Sidebar";
 import { ProductItem } from "@/components/ProductItem";
-import { useApi } from "../../libs/useApi";
+import { getLiga, authorizeToken, getCampeonato } from "../../libs/useApi";
 import { GetServerSideProps } from "next";
 import { redirect } from "next/dist/server/api-utils";
 import { Liga } from "@/types/Liga";
@@ -26,7 +26,7 @@ const Home = (data: Props) => {
       setToken(data.token);
     }
     if (data.user) setUser(data.user);
-  },[]); 
+  }); 
   
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -96,10 +96,10 @@ type Props = {
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { liga: ligalug } = context.query;
-  const api = useApi();
+ 
 
   //Get Liga
-  const liga = await api.getLiga(ligalug as string);
+  const liga = await getLiga(ligalug as string);
   if (!liga) {
     return {
       redirect: {
@@ -109,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const campeonatoData = await api.getCampeonato(14);
+  const campeonatoData = await getCampeonato(14);
   if (!campeonatoData) {
     return {
       redirect: {
@@ -125,7 +125,7 @@ if(!token) token = null;
 
 let user = null;
 if (token) {
-  const userResponse = await api.authorizeToken(token);
+  const userResponse = await authorizeToken(token);
  if (userResponse !== false) { // Verifica se a resposta não é falsa
    user = userResponse;
   }

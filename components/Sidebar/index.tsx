@@ -1,17 +1,17 @@
 import { useAuthContext } from '@/contexts/auth';
 import styles from './styles.module.css';
 import { Button } from '../Button';
-import { Tenant } from '@/types/Liga';
+import { Liga } from '@/types/Liga';
 import { SidebarMenuItem } from '../SidebarMenuItem';
 import { useRouter } from 'next/router';
 
 type Props = {
-    tenant: Tenant;
+    liga: Liga;
     open: boolean;
     onClose: () => void;
 }
 
-export const Sidebar = ({tenant, open, onClose}: Props) => {
+export const Sidebar = ({liga, open, onClose}: Props) => {
     const { user, setToken, setUser } = useAuthContext();
 
     const router = useRouter();
@@ -38,7 +38,7 @@ export const Sidebar = ({tenant, open, onClose}: Props) => {
                             <Button 
                                 color='blue'
                                 label = "Fazer Login"
-                                onClick={() => window.location.href = `/${tenant.slug}/login`}
+                                onClick={() => window.location.href = `/${liga.slug}/login`}
                                 fill
                             />
                         }
@@ -55,7 +55,7 @@ export const Sidebar = ({tenant, open, onClose}: Props) => {
                         color={'#6A7D8B'}
                         icon = "home"
                         label='Home'
-                        onClick={() => {onClose(); router.push(`/${tenant.slug}`); }}
+                        onClick={() => {onClose(); router.push(`/${liga.slug}`); }}
                     />
 
                 <SidebarMenuItem 

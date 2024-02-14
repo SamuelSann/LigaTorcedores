@@ -6,7 +6,7 @@ type Props ={
   onSearch: (searchValue:string) => void;
 }
 export const SearchInput = ({ onSearch}:Props) => {
-  const {tenant} = useAppContext();
+  const {liga} = useAppContext();
   const [focused, setFocused] = useState(false);  
   const[searchValue, setSeachValue] = useState('');
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -15,12 +15,12 @@ export const SearchInput = ({ onSearch}:Props) => {
     }
   }
   return (
-    <div className={styles.container} style={{borderColor: focused ? tenant?.mainColor:'#FFF'}}>
+    <div className={styles.container} style={{borderColor: focused ? liga?.mainColor:'#FFF'}}>
       <div 
       className={styles.button}
       onClick={() => onSearch(searchValue)}
       >
-        <SearchIcon color={tenant?.mainColor}/>
+        <SearchIcon color={liga?.mainColor}/>
       </div>
       <input
         type="text"

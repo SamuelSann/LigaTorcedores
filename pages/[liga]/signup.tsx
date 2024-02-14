@@ -1,6 +1,6 @@
 import styles from "../../styles/SignUp.module.css";
 import Head from "next/head";
-import { useApi } from "../../libs/useApi";
+import { getLiga } from "../../libs/useApi";
 import { GetServerSideProps } from "next";
 import { redirect } from "next/dist/server/api-utils";
 import { Liga } from "@/types/Liga";
@@ -103,10 +103,9 @@ type Props = {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { liga: ligaSlug } = context.query;
   console.log("Liga: ", ligaSlug);
-  const api = useApi();
 
   //Get Liga
-  const liga = await api.getLiga(ligaSlug as string);
+  const liga = await getLiga(ligaSlug as string);
   if (!liga) {
     return {
       redirect: {

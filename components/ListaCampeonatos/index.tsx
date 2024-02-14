@@ -1,14 +1,13 @@
-import { useApi } from "../../libs/useApi";
+import { listarCampeonatos } from "../../libs/useApi";
 import { use, useEffect, useState } from "react";
 import { Campeonato } from "@/types/Campeonato";
 
 export const ListaCampeonatos = () => {
-    const api = useApi();
     const [campeonatos, setCampeonatos] = useState<Campeonato[]>([]);
 
     useEffect(() => {
         const buscarCampeonatos = async () => {
-            const lista = await api.listarCampeonatos();
+            const lista = await listarCampeonatos();
             if (lista) {
                 setCampeonatos(lista);
             }

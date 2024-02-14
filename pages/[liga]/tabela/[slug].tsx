@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
-import Script from "next/script"; // Importar o Script do Next.js
+import Script from "next/script"; 
 import styles from "../../../styles/Tabela.module.css";
 import { TeamTable } from "@/components/Table";
 import { Sidebar } from "@/components/Sidebar";
 import { Banner } from "@/components/Banner";
 import { useAppContext } from "@/contexts/app";
-import { useApi } from "../../../libs/useApi";
+import { getTable, getLiga} from "../../../libs/useApi";
 import { Liga } from "@/types/Liga";
 import { Table } from "@/types/Table";
 import { Team } from "@/types/Team";
@@ -23,7 +23,7 @@ const Tabela = (data: Props) => {
   useEffect(() => {
     setLiga(data.liga);
     console.log("Dados da team:", data.team);
-  }, []);
+  });
 
   return (
     <div className={styles.container}>
@@ -73,10 +73,8 @@ export default Tabela;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { liga: ligaSlug, slug } = context.query;
 
-  const api = useApi();
-
   // Obtém a tabela
-  const team = await api.getTable(14);
+  const team = await getTable(14);
   if (team === null) {
     return {
       redirect: {
@@ -87,7 +85,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   //Get Liga
-  const liga = await api.getLiga(ligaSlug as string);
+  const liga = await getLiga(ligaSlug as string);
   if (!liga) {
     return {
       redirect: {
