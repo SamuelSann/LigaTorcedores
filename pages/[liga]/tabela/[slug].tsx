@@ -22,8 +22,8 @@ const Tabela = (data: Props) => {
 
   useEffect(() => {
     setLiga(data.liga);
-    console.log("Dados da team:", data.team);
-  });
+    console.log(data.team);
+  }, [data.liga]);
 
   return (
     <div className={styles.container}>

@@ -1,10 +1,9 @@
 import { SearchInput } from "@/components/SearchInput";
 import styles from "../../styles/Home.module.css";
 import { Banner } from "@/components/Banner";
-import { ListaCampeonatos } from "@/components/ListaCampeonatos";
 import { Sidebar } from "@/components/Sidebar";
-import { ProductItem } from "@/components/ProductItem";
-import { getLiga, authorizeToken, getCampeonato } from "../../libs/useApi";
+import { CampeonatoItem } from "@/components/CampeonatoItem";
+import { getLiga, authorizeToken, getCampeonato, getListCampeonatos } from "../../libs/useApi";
 import { GetServerSideProps } from "next";
 import { redirect } from "next/dist/server/api-utils";
 import { Liga } from "@/types/Liga";
@@ -26,7 +25,8 @@ const Home = (data: Props) => {
       setToken(data.token);
     }
     if (data.user) setUser(data.user);
-  }); 
+    console.log(data.campeonato);
+  },[data.liga, data.token, data.user]); 
   
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -72,7 +72,7 @@ const Home = (data: Props) => {
       <div className={styles.grid}>
       {
       data.campeonato && data.campeonato.map((item, index) => (
-    <ProductItem
+    <CampeonatoItem
       key={index}
       data={{
         id: item.campeonato_id, // Ou qualquer outro ID único
@@ -86,20 +86,22 @@ const Home = (data: Props) => {
 }
       </div>
     </div>
-)};''
+)};
+
 export default Home;
 type Props = {
   liga: Liga;
   token: string;
   user: User | null;
-  campeonato: Campeonato[];  
+  campeonato: Campeonato[];
 };
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { liga: ligalug } = context.query;
+  const { liga: ligaSlug } = context.query;
  
 
   //Get Liga
-  const liga = await getLiga(ligalug as string);
+  const liga = await getLiga(ligaSlug as string);
   if (!liga) {
     return {
       redirect: {
@@ -109,14 +111,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const campeonatoData = await getCampeonato(14);
-  if (!campeonatoData) {
+  const camps = await getListCampeonatos();
+  if (!camps) {
     return {
       redirect: {
         destination: '/liga',
         permanent: false,
       },
     };
+  }
+
+  const campeonatoDataList = [];
+
+  for (const campeonatoId of camps) {
+    const campeonatoData = await getCampeonato(campeonatoId);
+    if (campeonatoData) {
+      campeonatoDataList.push(campeonatoData);
+    }
   }
 
 //Get logged user
@@ -126,7 +137,7 @@ if(!token) token = null;
 let user = null;
 if (token) {
   const userResponse = await authorizeToken(token);
- if (userResponse !== false) { // Verifica se a resposta não é falsa
+ if (userResponse !== false) {
    user = userResponse;
   }
 }
@@ -136,7 +147,7 @@ return {
     liga,
     user,
     token,
-    campeonato: Array.isArray(campeonatoData) ? campeonatoData : [campeonatoData]
+    campeonato: campeonatoDataList,
   }
 }
 }

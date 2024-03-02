@@ -5,7 +5,7 @@ import { useAppContext } from "@/contexts/app";
 type Props = {
   data: Table;
 };
-export const ProductItem = ({ data }: Props) => {
+export const CampeonatoItem = ({ data }: Props) => {
   const {liga} = useAppContext();
   return (
     <Link  legacyBehavior href={`/${liga?.slug}/tabela/${data.slug}`}>
