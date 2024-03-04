@@ -2,8 +2,8 @@ import { SearchInput } from "@/components/SearchInput";
 import styles from "../../styles/Home.module.css";
 import { Banner } from "@/components/Banner";
 import { Sidebar } from "@/components/Sidebar";
-import { CampeonatoItem } from "@/components/CampeonatoItem";
-import { getLiga, authorizeToken, getCampeonato, getListCampeonatos } from "../../libs/useApi";
+import { TimeItem } from "@/components/TimeItem";
+import { getLiga, authorizeToken, getTeam} from "../../libs/useApi";
 import { GetServerSideProps } from "next";
 import { redirect } from "next/dist/server/api-utils";
 import { Liga } from "@/types/Liga";
@@ -12,11 +12,11 @@ import { use, useEffect, useState } from "react";
 import { getCookie, CookieValueTypes} from "cookies-next";
 import { User } from "@/types/User";
 import { useAuthContext } from "@/contexts/auth";
-import { Table } from "@/types/Table";
 import { Campeonato } from "@/types/Campeonato";
+import { Team } from "@/types/Team";
 
 
-const Home = (data: Props) => {
+const Favorite = (data: Props) => {
   const {setToken, setUser} = useAuthContext();
   const { liga, setLiga } = useAppContext();
   useEffect(() => {
@@ -36,7 +36,7 @@ const Home = (data: Props) => {
       <header className={styles.header}>
         <div className={styles.headerTop}>
           <div className={styles.TopLeft}>
-            <div className={styles.headerTitle}>Liga Dos Torcedores</div>
+            <div className={styles.headerTitle}>Favoritos</div>
           </div>
           <div className={styles.TopRight}>
             <div 
@@ -67,18 +67,16 @@ const Home = (data: Props) => {
           <SearchInput onSearch={handleSearch} />
         </div>
       </header>
-      <Banner />
       <div className={styles.grid}>
-      {
-      data.campeonato && data.campeonato.map((item, index) => (
-    <CampeonatoItem
-      key={index}
+{
+  data.team && data.team.map((item, index) => (
+    <TimeItem
+    key = {index}
       data={{
-        id: item.campeonato_id,
-        image: item.logo,
-        categoryName: item.tipo,
-        name: item.nome_popular,
-        slug: item.slug
+        time_id: item.time.time_id, 
+        escudo: item.time.escudo, 
+        nome_popular: item.time.nome_popular,
+        sigla:  item.time.sigla,
       }}
     />
   ))
@@ -87,12 +85,13 @@ const Home = (data: Props) => {
     </div>
 )};
 
-export default Home;
+export default Favorite;
 type Props = {
   liga: Liga;
   token: string;
   user: User | null;
   campeonato: Campeonato[];
+  team: Team[];
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -110,23 +109,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const camps = await getListCampeonatos();
-  if (!camps) {
+  const team = await getTeam(14);
+  if (team === null) {
     return {
       redirect: {
-        destination: '/liga',
+        destination: "/liga",
         permanent: false,
       },
     };
-  }
-
-  const campeonatoDataList = [];
-
-  for (const campeonatoId of camps) {
-    const campeonatoData = await getCampeonato(campeonatoId);
-    if (campeonatoData) {
-      campeonatoDataList.push(campeonatoData);
-    }
   }
 
 //Get logged user
@@ -146,7 +136,7 @@ return {
     liga,
     user,
     token,
-    campeonato: campeonatoDataList,
+    team
   }
 }
 }

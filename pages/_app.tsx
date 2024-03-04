@@ -8,10 +8,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthContextProvider>
       <AppContextProvider>
-        <Script
-          src="https://cdn.api-futebol.com.br/widgets/v1/apifutebol-tabela.js"
-          strategy="lazyOnload"
-        />
         <Component {...pageProps} />
       </AppContextProvider>
     </AuthContextProvider>

@@ -74,7 +74,6 @@ type Props = {
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { liga: ligaSlug } = context.query;
-  console.log("Liga: ", ligaSlug);
 
   //Get Liga
   const liga = await getLiga(ligaSlug as string);

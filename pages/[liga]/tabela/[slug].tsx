@@ -6,7 +6,7 @@ import { TeamTable } from "@/components/Table";
 import { Sidebar } from "@/components/Sidebar";
 import { Banner } from "@/components/Banner";
 import { useAppContext } from "@/contexts/app";
-import { getTable, getLiga} from "../../../libs/useApi";
+import { getTeam, getLiga} from "../../../libs/useApi";
 import { Liga } from "@/types/Liga";
 import { Table } from "@/types/Table";
 import { Team } from "@/types/Team";
@@ -22,7 +22,6 @@ const Tabela = (data: Props) => {
 
   useEffect(() => {
     setLiga(data.liga);
-    console.log(data.team);
   }, [data.liga]);
 
   return (
@@ -73,8 +72,7 @@ export default Tabela;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { liga: ligaSlug, slug } = context.query;
 
-  // Obtém a tabela
-  const team = await getTable(14);
+  const team = await getTeam(14);
   if (team === null) {
     return {
       redirect: {

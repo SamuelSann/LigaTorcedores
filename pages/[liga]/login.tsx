@@ -31,8 +31,9 @@ const Login = (data: Props) => {
   const handleSubmit = () => {
     setToken('1234');
     setUser({
-      name: 'Samuel',
-      email: 'samuel51@gmail.com'
+      name: 'Teste',
+      email: 'Teste51@gmail.com',
+      time: 'Chapecoense'
     });
     router.push(`/${data.liga.slug}`);
   };
@@ -112,7 +113,6 @@ type Props = {
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { liga: ligaSlug } = context.query;
-  console.log("Liga: ", ligaSlug);
 
   //Get Liga
   const liga = await getLiga(ligaSlug as string);

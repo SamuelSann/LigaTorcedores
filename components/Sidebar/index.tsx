@@ -31,14 +31,20 @@ export const Sidebar = ({liga, open, onClose}: Props) => {
                         {user &&
                             <div className={styles.userInfo}>
                                 <strong>{user.name}</strong>
-                                Time do Coração
+                                {user.time &&
+                                    <span>{user.time}</span>
+                                }
+                                {!user.time &&
+                                    <p>Time do Coração</p>
+                                }
+                                
                             </div>
                         }
                         { !user && 
                             <Button 
                                 color='blue'
                                 label = "Fazer Login"
-                                onClick={() => window.location.href = `/${liga.slug}/login`}
+                                onClick={() => router.push(`/${liga.slug}/login`)}
                                 fill
                             />
                         }
@@ -62,7 +68,7 @@ export const Sidebar = ({liga, open, onClose}: Props) => {
                         color={'#6A7D8B'}
                         icon = "fav"
                         label='Favorito'
-                        onClick={() => {}}
+                        onClick={() => {onClose(); router.push(`/${liga.slug}/favorite`); }}
                     />              
                 </div>
                 <div className={styles.menuButton}>

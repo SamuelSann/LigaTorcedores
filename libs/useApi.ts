@@ -2,6 +2,7 @@ import { Liga } from "@/types/Liga";
 import { User } from "@/types/User";
 import { Table } from "@/types/Table";
 import { Campeonato } from "@/types/Campeonato";
+import { Time } from "@/types/Time";
 
 
 export const getLiga = async (ligaSlug: string): Promise<boolean | Liga> => {
@@ -21,10 +22,11 @@ export const authorizeToken = async (token: string): Promise<User | false> => {
     return {
         name: 'Teste',
         email: 'teste@gmail.com',
+        time: 'Chapecoense'
     }
 };
 
-export const getTable = async (campeonatoId: number): Promise<Table[] | null> => {
+export const getTeam = async (campeonatoId: number): Promise<Table[] | null> => {
     try {
         const response = await fetch(`https://api.api-futebol.com.br/v1/campeonatos/${campeonatoId}/tabela`, {
             headers: {
@@ -44,6 +46,23 @@ export const getTable = async (campeonatoId: number): Promise<Table[] | null> =>
 export const getCampeonato = async (campeonatoId: number): Promise<Table[] | null> => {
     try {
         const response = await fetch(`https://api.api-futebol.com.br/v1/campeonatos/${campeonatoId}`, {
+            headers: {
+                'Authorization': `Bearer test_6befac6b43a6bfca31ec330838c96d`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Erro ao buscar dados da tabela');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+export const getTime = async (timeId: number): Promise<Time[] | null> => {
+    try {
+        const response = await fetch(`https://api.api-futebol.com.br/v1/times/${timeId}`, {
             headers: {
                 'Authorization': `Bearer test_6befac6b43a6bfca31ec330838c96d`
             }
